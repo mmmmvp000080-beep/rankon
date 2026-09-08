@@ -1,7 +1,10 @@
 import { NextRequest } from "next/server";
+import { FileCategory, Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
 import { requireAdminApi } from "@/lib/api-utils";
 import { success, failure } from "@/lib/api-response";
+
+const FILE_CATEGORIES = new Set<string>(Object.values(FileCategory));
 
 export async function GET(request: NextRequest) {
   const { error } = await requireAdminApi();
@@ -13,14 +16,10 @@ export async function GET(request: NextRequest) {
     const contractNumber = searchParams.get("contractNumber") || "";
     const category = searchParams.get("category") || "";
 
-    const where: {
-      category?: string;
-      contract?: {
-        companyName?: { contains: string };
-        contractNumber?: { contains: string };
-      };
-    } = {};
-    if (category) where.category = category;
+    const where: Prisma.UploadedFileWhereInput = {};
+    if (category && FILE_CATEGORIES.has(category)) {
+      where.category = category as FileCategory;
+    }
     if (companyName || contractNumber) {
       where.contract = {
         ...(companyName ? { companyName: { contains: companyName } } : {}),
