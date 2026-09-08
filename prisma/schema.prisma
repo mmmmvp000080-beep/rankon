@@ -1,0 +1,221 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum ContractType {
+  NAVER_PLACE_MONTHLY_MANAGEMENT
+  NAVER_PLACE_MONTHLY_GUARANTEE
+}
+
+enum ContractStatus {
+  DRAFT
+  PROVIDER_SIGNED
+  CUSTOMER_PENDING
+  COMPLETED
+  CANCELLED
+}
+
+enum ShareTokenType {
+  CONTRACT_SIGN
+  FILE_UPLOAD
+}
+
+enum FileCategory {
+  BUSINESS_LICENSE
+  BANKBOOK
+  OTHER
+}
+
+enum PdfType {
+  DRAFT
+  SIGNED
+}
+
+enum HistoryActorType {
+  ADMIN
+  CUSTOMER
+  SYSTEM
+}
+
+enum CustomerType {
+  INDIVIDUAL
+  SOLE_PROPRIETOR
+  CORPORATION
+}
+
+model AdminUser {
+  id           String   @id @default(cuid())
+  username     String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Contract {
+  id                    String         @id @default(cuid())
+  contractNumber        String         @unique
+  companyName           String
+  contactName           String
+  contactTitle          String?
+  customerType          CustomerType   @default(INDIVIDUAL)
+  phone                 String
+  email                 String?
+  businessNumber        String?
+  corporateRegistrationNumber String?
+  address               String?
+  startDate             DateTime
+  endDate               DateTime
+  totalAmount           Int
+  vatIncluded           Boolean        @default(true)
+  paymentTerms          String?
+  specialTerms          String?
+  internalMemo          String?
+  contractPurpose       String?
+  contractType          ContractType   @default(NAVER_PLACE_MONTHLY_MANAGEMENT)
+  status                ContractStatus @default(DRAFT)
+  providerSignerName    String?
+  providerSignerTitle   String?
+  providerSignaturePath String?
+  providerSignedAt      DateTime?
+  customerSignerName    String?
+  customerSignerTitle   String?
+  customerSignaturePath String?
+  customerSignedAt      DateTime?
+  signedSnapshot        String?
+  signedContentHash     String?
+  lockedAt              DateTime?
+  createdAt             DateTime       @default(now())
+  updatedAt             DateTime       @updatedAt
+
+  items        ContractItem[]
+  clauses      ContractClause[]
+  shareTokens  ShareToken[]
+  uploadedFiles UploadedFile[]
+  generatedPdfs GeneratedPdf[]
+  history      ContractHistory[]
+}
+
+model ContractTemplateClause {
+  id           String       @id @default(cuid())
+  contractType ContractType @default(NAVER_PLACE_MONTHLY_MANAGEMENT)
+  title        String
+  content      String
+  sortOrder    Int          @default(0)
+  isActive     Boolean      @default(true)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  @@index([contractType])
+}
+
+model ContractClause {
+  id         String   @id @default(cuid())
+  contractId String
+  title      String
+  content    String
+  sortOrder  Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  contract Contract @relation(fields: [contractId], references: [id], onDelete: Cascade)
+
+  @@index([contractId])
+}
+
+model ContractItem {
+  id          String   @id @default(cuid())
+  contractId  String
+  name        String
+  description String?
+  quantity    Int      @default(1)
+  unitPrice   Int
+  amount      Int
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  contract Contract @relation(fields: [contractId], references: [id], onDelete: Cascade)
+
+  @@index([contractId])
+}
+
+model ShareToken {
+  id             String         @id @default(cuid())
+  contractId     String
+  token          String         @unique
+  type           ShareTokenType
+  isActive       Boolean        @default(true)
+  expiresAt      DateTime?
+  lastAccessedAt DateTime?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  contract Contract @relation(fields: [contractId], references: [id], onDelete: Cascade)
+
+  @@index([contractId])
+  @@index([token])
+}
+
+model UploadedFile {
+  id           String       @id @default(cuid())
+  contractId   String
+  category     FileCategory
+  originalName String
+  storedName   String
+  storagePath  String
+  mimeType     String
+  fileSize     Int
+  uploadedBy   String
+  createdAt    DateTime     @default(now())
+
+  contract Contract @relation(fields: [contractId], references: [id], onDelete: Cascade)
+
+  @@index([contractId])
+}
+
+model GeneratedPdf {
+  id          String   @id @default(cuid())
+  contractId  String
+  type        PdfType
+  storagePath String
+  contentHash String?
+  createdAt   DateTime @default(now())
+
+  contract Contract @relation(fields: [contractId], references: [id], onDelete: Cascade)
+
+  @@index([contractId])
+  @@index([contentHash])
+}
+
+model CompanySettings {
+  id                    String   @id @default(cuid())
+  companyName           String
+  representativeName    String
+  representativeTitle   String?
+  businessNumber        String   @default("")
+  address               String   @default("")
+  phone                 String   @default("")
+  email                 String   @default("")
+  defaultSignaturePath  String?
+  defaultContractPurpose          String  @default("양 당사자는 상호 신뢰를 바탕으로 서비스 제공 계약을 체결하며, 본 계약서에 명시된 조건에 따라 성실히 이행할 것을 약정한다.")
+  defaultContractPurposeGuarantee String  @default("")
+  updatedAt             DateTime @updatedAt
+}
+
+model ContractHistory {
+  id          String           @id @default(cuid())
+  contractId  String
+  action      String
+  description String
+  actorType   HistoryActorType
+  createdAt   DateTime         @default(now())
+
+  contract Contract @relation(fields: [contractId], references: [id], onDelete: Cascade)
+
+  @@index([contractId])
+}

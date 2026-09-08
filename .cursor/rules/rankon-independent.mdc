@@ -1,0 +1,21 @@
+---
+description: RankOn is an independent project. Never work in the nested Dr. Forward folder.
+alwaysApply: true
+---
+
+# RankOn is independent
+
+This workspace (`rankon-contract`) is a standalone RankOn project. It is not the Dr. Forward repo.
+
+- Work only in this folder: `C:\Users\a0804\Desktop\rankon-contract`
+- Never `cd` into, edit, or run commands in `drforward-contract/`
+- Do not fetch, pull, or push to the Dr. Forward GitHub repository
+- Leave the nested `drforward-contract/` folder untouched
+
+# Deploy only to this RankOn identity
+
+GitHub, Vercel, and production for this app use only these accounts. Never link, push, or deploy this project to any other GitHub user, Vercel team, or existing project.
+
+- GitHub: `https://github.com/mmmmvp000080-beep/rankon.git`
+- Vercel team: `on-4f4d` (`https://vercel.com/on-4f4d`)
+- Do not import this repo into any other Vercel account or reuse another project's env/domain

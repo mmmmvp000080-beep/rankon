@@ -1,0 +1,15 @@
+drforward-contract
+node_modules
+.next
+storage
+.agents
+.claude
+.windsurf
+.cursor
+assets
+package
+*.tgz
+dev.db
+.git-commit-msg-tmp
+.tmp-cookies.txt
+.claude

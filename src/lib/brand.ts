@@ -1,0 +1,62 @@
+import { LOGO_ASPECT, LOGO_HEIGHT } from "@/lib/logo-assets";
+
+export const BRAND = {
+  name: "RankOn",
+  nameKo: "랭크온",
+  fullName: "RankOn",
+  tagline: "Contract Operations Platform",
+  slogan: "계약부터 서명, 문서화까지.",
+  description: "랭크온 전자계약 관리 시스템",
+  logo: {
+    aspectRatio: {
+      main: LOGO_ASPECT.full,
+      symbol: LOGO_ASPECT.symbol,
+    },
+  },
+  colors: {
+    primary: "#F57709",
+    primaryHover: "#DC6A08",
+    primaryLight: "#FF9A3D",
+    primarySoft: "rgba(245, 119, 9, 0.12)",
+    primaryGlow: "rgba(245, 119, 9, 0.32)",
+    secondary: "#0E0F12",
+    secondaryMuted: "#1A1B20",
+    accent: "#F57709",
+    background: "#F7F6F2",
+    backgroundSecondary: "#EFEDE6",
+    backgroundDark: "#0A0B0E",
+    card: "#FFFFFF",
+    cardHover: "#FDFCFA",
+    border: "#E5E2DA",
+    borderLight: "#F0EDE6",
+    borderDark: "rgba(255, 255, 255, 0.08)",
+    text: "#121318",
+    textSecondary: "#4A4D57",
+    textMuted: "#7A7E8A",
+    textPlaceholder: "#A8ACB8",
+    textOnDark: "#F5F3EE",
+    textOnDarkMuted: "#9A9EA8",
+    success: "#0D9B6E",
+    successSoft: "#E6F9F2",
+    warning: "#B8860B",
+    warningSoft: "#FBF6E8",
+    error: "#C93A3A",
+    errorSoft: "#FEF0F0",
+  },
+  radius: {
+    sm: "6px",
+    md: "8px",
+    lg: "12px",
+    xl: "16px",
+    "2xl": "20px",
+  },
+  shadow: {
+    sm: "0 1px 2px rgba(14, 15, 18, 0.04), 0 2px 4px rgba(14, 15, 18, 0.03)",
+    md: "0 4px 16px rgba(14, 15, 18, 0.06), 0 1px 4px rgba(14, 15, 18, 0.04)",
+    lg: "0 12px 40px rgba(14, 15, 18, 0.08), 0 4px 12px rgba(14, 15, 18, 0.04)",
+    glow: "0 0 24px rgba(245, 119, 9, 0.22)",
+    card: "0 0 0 1px rgba(14, 15, 18, 0.04), 0 2px 8px rgba(14, 15, 18, 0.04), 0 8px 24px rgba(14, 15, 18, 0.03)",
+  },
+} as const;
+
+export const LOGO_DISPLAY = LOGO_HEIGHT;
